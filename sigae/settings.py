@@ -37,6 +37,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'atendimento',
+    'heap',
+    'rubro_negra',
+    'tabela_hash'
 ]
 
 MIDDLEWARE = [
