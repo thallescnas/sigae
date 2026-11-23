@@ -42,3 +42,60 @@ class Patient:
             "priority_label": label,
             "status": self.status,
         }
+class Doctor:
+    __slots__ = (
+        "id",
+        "name",
+        "registry_code",
+        "status",
+        "completed_count",
+        "last_assigned_seq",
+        "heap_index"
+    )
+
+    def __init__(self, doctor_id: int, name: str, registry_code: str, status: str = "Disponível", completed_count: int = 0, last_assigned_seq: int = 0):
+        self.id = doctor_id
+        self.name = name
+        self.registry_code = registry_code
+        self.status = status
+        self.completed_count = completed_count
+        self.last_assigned_seq = last_assigned_seq
+        self.heap_index: int = -1
+
+    def to_dict(self) -> dict:
+        return {
+            "id": self.id,
+            "name": self.name,
+            "registry_code": self.registry_code,
+            "status": self.status,
+            "completed_count": self.completed_count,
+            "last_assigned_seq": self.last_assigned_seq,
+        }
+
+class Attendance:
+    __slots__ = (
+        "id",
+        "patient",
+        "doctor",
+        "status",
+        "started_at",
+        "finished_at"
+    )
+    def __init__(self, attendance_id: int, patient: Patient, doctor: Doctor, status: str = "Em atendimento", started_at: str | None = None, finished_at: str | None = None):
+        self.id = attendance_id
+        self.patient = patient
+        self.doctor = doctor
+        self.status = status
+        self.started_at = started_at or datetime.now().strftime("%H:%M:%S")
+        self.finished_at = finished_at
+        
+    def to_dict(self) -> dict:
+        return {
+            "id": self.id,
+            "patient": self.patient.to_dict(),
+            "doctor": self.doctor.to_dict(),
+            "status": self.status,
+            "started_at": self.started_at,
+            "finished_at": self.finished_at,
+        }
+
