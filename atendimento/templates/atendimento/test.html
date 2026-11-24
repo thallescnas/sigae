@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIGAE</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-color: #ffffff;
+            background-image:
+                radial-gradient(circle at 15% 15%, rgba(254, 202, 202, 0.85), transparent 50%),
+                radial-gradient(circle at 50% 45%, rgba(255, 255, 255, 0.95), transparent 58%),
+                radial-gradient(circle at 88% 20%, rgba(186, 230, 253, 0.55), transparent 45%),
+                radial-gradient(circle at 75% 88%, rgba(254, 205, 211, 0.78), transparent 52%),
+                linear-gradient(135deg, #fff1f2 0%, #ffffff 48%, #ffe4e6 78%, #f0f9ff 100%);
+            color: #1e293b;
+        }
+
+        .container {
+            flex: 1;
+        }
+
+        .topo {
+            background: linear-gradient(90deg, rgba(254, 226, 226, 0.82) 0%, rgba(255, 255, 255, 0.92) 55%, rgba(224, 242, 254, 0.72) 100%);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-bottom: 2px solid transparent;
+            border-image: linear-gradient(90deg, #fda4af, #ffffff, #7dd3fc) 1;
+            padding: 18px 24px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            box-shadow: 0 4px 24px rgba(225, 29, 72, 0.08);
+        }
+
+        .topo .logo {
+            height: 150px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .topo .mensagem {
+            margin: 0 auto;
+            padding-right: 150px;
+            background: linear-gradient(90deg, #e11d48 0%, #f43f5e 60%, #0284c7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 36px;
+        }
+
+        .painel-grid {
+            display: grid;
+            grid-template-columns: 280px 1fr 1fr 320px;
+            gap: 20px;
+            padding: 24px;
+            align-items: start;
+        }
+
+        aside {
+            background: rgba(255, 255, 255, 0.62);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.92);
+            border-top: 2px solid rgba(253, 164, 175, 0.85);
+            padding: 18px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(225, 29, 72, 0.06), inset 0 1px 0 #ffffff;
+            padding-bottom: 70px;
+        }
+
+        aside>.card:last-child {
+            margin-bottom: 0;
+        }
+
+        .coluna-direita .cruz {
+            height: 120px;
+            width: auto;
+            object-fit: contain;
+            display: block;
+            margin: 0 auto 12px auto;
+        }
+
+        .card,
+        .card-paciente,
+        .card-medico {
+            background: rgba(255, 255, 255, 0.86);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.96);
+            padding: 16px;
+            border-radius: 14px;
+            box-shadow: 0 6px 18px rgba(225, 29, 72, 0.04);
+            margin-bottom: 14px;
+        }
+
+        .card h3,
+        .coluna-centro h3,
+        .coluna-centro-direita h3,
+        .coluna-direita h2 {
+            font-size: 15px;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+            background: linear-gradient(90deg, #e11d48 0%, #fb7185 65%, #0284c7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 12px;
+        }
+
+        .card-paciente,
+        .card-medico {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        label {
+            font-size: 13px;
+            color: #64748b;
+            margin-left: 2px;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 9px 12px;
+            margin: 6px 0 12px 0;
+            border: 1px solid rgba(253, 164, 175, 0.45);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.95);
+            color: #0f172a;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: #fb7185;
+            box-shadow: 0 0 12px rgba(251, 113, 133, 0.22);
+        }
+
+        .barra-acoes {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .barra-acoes input {
+            margin: 0;
+            flex: 1;
+        }
+
+        button {
+            background: linear-gradient(120deg, #f43f5e 0%, #fb7185 65%, #60a5fa 100%);
+            color: #ffffff;
+            text-shadow: 0 1px 2px rgba(15, 23, 42, 0.18);
+            border: none;
+            padding: 9px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(244, 63, 94, 0.22);
+            transition: all 0.2s ease;
+        }
+
+        button:hover {
+            filter: brightness(1.05);
+            transform: translateY(-1px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .card button {
+            width: 100%;
+        }
+
+        .btn-concluir {
+            background: linear-gradient(120deg, #10b981 0%, #34d399 100%);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.24);
+        }
+
+        .btn-cancelar {
+            background: linear-gradient(120deg, #e11d48 0%, #fb7185 100%);
+            box-shadow: 0 4px 12px rgba(225, 29, 72, 0.24);
+        }
+
+        .card ul {
+            padding-left: 18px;
+            font-size: 13px;
+            color: #475569;
+        }
+
+        .card li {
+            margin-bottom: 6px;
+        }
+
+        .badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .badge-1 {
+            background: #f43f5e;
+            box-shadow: 0 0 10px rgba(244, 63, 94, 0.25);
+        }
+
+        .badge-2 {
+            background: #fb923c;
+        }
+
+        .badge-3 {
+            background: #eab308;
+        }
+
+        .badge-4 {
+            background: #10b981;
+        }
+
+        .badge-5 {
+            background: #38bdf8;
+        }
+
+        .status-disponivel {
+            background: #e0f2fe;
+            color: #0369a1;
+            border: 1px solid #7dd3fc;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-ocupado {
+            background: #ffe4e6;
+            color: #9f1239;
+            border: 1px solid #fda4af;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .bottom {
+            background: linear-gradient(90deg, rgba(254, 226, 226, 0.82) 0%, rgba(255, 255, 255, 0.92) 55%, rgba(224, 242, 254, 0.72) 100%);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-top: 2px solid transparent;
+            border-image: linear-gradient(90deg, #fda4af, #ffffff, #7dd3fc) 1;
+            padding: 36px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            box-shadow: 0 -4px 24px rgba(225, 29, 72, 0.06);
+        }
+
+        .bottom .parcerias h3 {
+            font-size: 20px;
+            font-weight: 700;
+            background: linear-gradient(90deg, #e11d48 0%, #fb7185 65%, #0284c7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .bottom .parcerias p,
+        .bottom .rodape-info {
+            font-size: 14px;
+            color: #64748b;
+            margin-top: 4px;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="topo">
+        <img src="/atendimento/static/atendimento/SIGAE.png" alt="Logo SIGAE" class="logo">
+        <h1 class="mensagem">Painel de Triagem e Atendimento</h1>
+    </header>
+
+    <main class="container">
+        <div class="painel-grid">
+            <aside class="coluna-esquerda">
+                <div class="card">
+                    <h3>Novo Paciente</h3>
+                    <form method="POST">
+                        <input type="text" placeholder="Nome Paciente">
+                        <label for="select-prioridade">Escolha uma prioridade:</label>
+                        <select name="prioridades" id="select-prioridades">
+                            <option value="1">1 - Emergência</option>
+                            <option value="2">2 - Muito urgente</option>
+                            <option value="3">3 - Urgente</option>
+                            <option value="4">4 - Pouco urgente</option>
+                            <option value="5">5 - Não urgente</option>
+                        </select>
+                        <button type="submit">Cadastrar</button>
+                    </form>
+                </div>
+                <div class="card">
+                    <h3>Novo Médico</h3>
+                    <form method="POST">
+                        <input type="text" placeholder="Nome do médico">
+                        <input type="text" placeholder="CRM">
+                        <button type="submit">Cadastrar</button>
+                    </form>
+                </div>
+                <div class="card">
+                    <h3>Histórico Recente</h3>
+                    <ul>
+                        <li>Paciente #00 — Atendido por Dr. Carlos</li>
+                        <li>Paciente #01 — Atendido por Dra. Ana</li>
+                    </ul>
+                </div>
+            </aside>
+            <section class="coluna-centro">
+                <h3>Fila de Espera</h3>
+                <div class="barra-acoes">
+                    <input type="text" placeholder="Buscar por ID...">
+                    <button class="btn-primario">Chamar Próximo</button>
+                </div>
+                <div class="card-paciente">Maria Silva - ID #01
+                    <span class="badge badge-1">Emergência</span>
+                </div>
+                <div class="card-paciente">João Souza - ID #02
+                    <span class="badge badge-4">Pouco urgente</span>
+                </div>
+            </section>
+            <section class="coluna-centro-direita">
+                <h3>Consulta de Paciente</h3>
+                <div class="barra-acoes">
+                    <input type="text" placeholder="Buscar por Nome...">
+                    <button class="btn-primario">Buscar</button>
+                </div>
+            </section>
+            <aside class="coluna-direita">
+                <img src="/atendimento/static/atendimento/CRUZ.png" alt="Cruz" class="cruz">
+                <h2>Área Médica</h2>
+                <div class="card-medico">Dr. Carlos — Disponível (0 atendimentos)
+                    <span class="status-disponivel">Disponível</span>
+                </div>
+                <div class="card-medico">Dra. Ana — Em atendimento (Paciente #01)
+                    <span class="status-ocupado">Em atendimento</span>
+                    <button class="btn-concluir">Concluir</button>
+                    <button class="btn-cancelar">Cancelar</button>
+                </div>
+            </aside>
+        </div>
+    </main>
+
+    <footer class="bottom">
+        <div class="parcerias">
+            <h3>Agilidade na triagem, precisão no cuidado — cada segundo salva vidas.</h3>
+            <p>Sistema Inteligente de Gerenciamento de Atendimentos de Emergência</p>
+        </div>
+        <span class="rodape-info">SIGAE © 2026 — Protocolo de Triagem Manchester</span>
+    </footer>
+</body>
+
+</html>
