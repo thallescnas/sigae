@@ -140,3 +140,54 @@ class RedBlackTree:
         else:
             u.parent.right = v
         v.parent = u.parent
+        
+    def _minimum(self, node: _RBNode) -> _RBNode:
+        while node.left is not self.NIL:
+            node = node.left
+        return node
+
+    def remove(self, patient) -> bool:
+        z = patient.rb_node
+        if z is None or z is self.NIL:
+            return False
+
+        y = z
+        y_original_color = y.color
+
+        if z.left is self.NIL:
+            x = z.right
+            self._transplant(z, z.right)
+        elif z.right is self.NIL:
+            x = z.left
+            self._transplant(z, z.left)
+        else:
+            y = self._minimum(z.right)
+            y_original_color = y.color
+            x = y.right
+            if y.parent is z:
+                x.parent = y
+            else:
+                self._transplant(y, y.right)
+                y.right = z.right
+                y.right.parent = y
+
+            self._transplant(z, y)
+            y.left = z.left
+            y.left.parent = y
+            y.color = z.color
+
+        patient.rb_node = None
+        z.left = None
+        z.right = None
+        z.parent = None
+        self._size -= 1
+
+        if y_original_color == BLACK:
+            self._fix_delete(x)
+
+        self.NIL.parent = self.NIL
+        self.NIL.color = BLACK
+        if self.root is not self.NIL:
+            self.root.color = BLACK
+
+        return True
