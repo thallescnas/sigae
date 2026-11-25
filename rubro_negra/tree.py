@@ -108,7 +108,6 @@ class RedBlackTree:
             else:
                 uncle = grandparent.left
                 if uncle.color == RED:
-                    # Caso 1
                     z.parent.color = BLACK
                     uncle.color = BLACK
                     grandparent.color = RED
@@ -121,3 +120,23 @@ class RedBlackTree:
                     grandparent.color = RED
                     self._left_rotate(grandparent)
         self.root.color = BLACK
+    def search(self, arrival_minutes: int, patient_id: int):
+        target = (arrival_minutes, patient_id)
+        curr = self.root
+        while curr is not self.NIL:
+            if target == curr.key:
+                return curr.patient
+            if target < curr.key:
+                curr = curr.left
+            else:
+                curr = curr.right
+        return None
+
+    def _transplant(self, u: _RBNode, v: _RBNode) -> None:
+        if u.parent is self.NIL:
+            self.root = v
+        elif u is u.parent.left:
+            u.parent.left = v
+        else:
+            u.parent.right = v
+        v.parent = u.parent
