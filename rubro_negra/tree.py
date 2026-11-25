@@ -26,7 +26,7 @@ class RedBlackTree:
     def is_empty(self) -> bool:
         return self.root is self.NIL
 
-    def _left_rotate(self, x: _RBNode) -> None:
+    def _left_rotate(self, x: _RBNode):
         y = x.right
         x.right = y.left
         if y.left is not self.NIL:
@@ -43,7 +43,7 @@ class RedBlackTree:
         y.left = x
         x.parent = y
         self.rotations += 1
-    def _right_rotate(self, y: _RBNode) -> None:
+    def _right_rotate(self, y: _RBNode):
         x = y.left
         y.left = x.right
         if x.right is not self.NIL:
@@ -60,3 +60,64 @@ class RedBlackTree:
         x.right = y
         y.parent = x
         self.rotations += 1
+
+    def insert(self, patient):
+        if patient.rb_node is not None:
+            raise ValueError(f"O paciente {patient.id} já se encontra na arvore rubro negra!")
+        key = (patient.arrival_minutes, patient.id)
+        new_node = _RBNode(key=key, patient=patient, color=RED, nil=self.NIL)
+
+        parent = self.NIL
+        curr = self.root
+        while curr is not self.NIL:
+            parent = curr
+            if key < curr.key:
+                curr = curr.left
+            elif key > curr.key:
+                curr = curr.right
+            else: raise ValueError(f"Key duplicada na rubro negra: {key}")
+        new_node.parent = parent
+        if parent is self.NIL:
+            self.root = new_node
+        elif key < parent.key:
+            parent.left = new_node
+        else:
+            parent.right = new_node
+
+        patient.rb_node = new_node
+        self._size += 1
+        self._fix_insert(new_node)
+
+    def _fix_insert(self, z: _RBNode):
+        while z.parent.color == RED:
+            grandparent = z.parent.parent
+            if z.parent is grandparent.left:
+                uncle = grandparent.right
+                if uncle.color == RED:
+                    z.parent.color = BLACK
+                    uncle.color = BLACK
+                    grandparent.color = RED
+                    z = grandparent
+                else:
+                    if z is z.parent.right:
+                        z = z.parent
+                        self._left_rotate(z)
+                    z.parent.color = BLACK
+                    grandparent.color = RED
+                    self._right_rotate(grandparent)
+            else:
+                uncle = grandparent.left
+                if uncle.color == RED:
+                    # Caso 1
+                    z.parent.color = BLACK
+                    uncle.color = BLACK
+                    grandparent.color = RED
+                    z = grandparent
+                else:
+                    if z is z.parent.left:
+                        z = z.parent
+                        self._right_rotate(z)
+                    z.parent.color = BLACK
+                    grandparent.color = RED
+                    self._left_rotate(grandparent)
+        self.root.color = BLACK
