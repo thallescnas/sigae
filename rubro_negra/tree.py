@@ -201,6 +201,7 @@ class RedBlackTree:
             if x is x.parent.left:
                 w = x.parent.right
                 if w.color == RED:
+                    # Caso 1
                     w.color = BLACK
                     x.parent.color = RED
                     self._left_rotate(x.parent)
