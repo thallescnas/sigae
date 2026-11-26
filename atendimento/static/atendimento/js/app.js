@@ -12,7 +12,7 @@ function pegarCookieCsrf() {
 async function enviarRequisicao(url, metodo = "GET", dados = null) {
   const config = {
     method: metodo,
-    headers: { Accept: "application/json" },
+    headers: { "Accept": "application/json" },
     credentials: "same-origin",
   };
   if (metodo !== "GET") {
