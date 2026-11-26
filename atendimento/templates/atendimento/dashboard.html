@@ -1,0 +1,145 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIGAE</title>
+    <link rel="stylesheet" href="{% static 'atendimento/css/style.css' %}">
+</head>
+
+<body>
+    <header class="topo">
+        <img src="{% static 'atendimento/img/SIGAE.png' %}" alt="Logo SIGAE" class="logo">
+        <h1 class="mensagem">Painel de Triagem e Atendimento</h1>
+    </header>
+
+    <main class="container">
+        <section class="resumo-topo">
+            <div class="stat-pill">Aguardando: <strong id="count-aguardando">0</strong></div>
+            <div class="stat-pill">Em atendimento: <strong id="count-atendimento">0</strong></div>
+            <div class="stat-pill">Concluídos: <strong id="count-concluido">0</strong></div>
+            <div class="stat-pill">Cancelados: <strong id="count-cancelado">0</strong></div>
+            <div class="stat-pill">Médicos livres: <strong id="count-med-livres">0</strong></div>
+            <div class="stat-pill">Médicos ocupados: <strong id="count-med-ocupados">0</strong></div>
+            <button type="button" id="btn-validar" class="btn-secundario">Auditar Estruturas</button>
+        </section>
+
+        <div id="alerta-status" class="alerta-status oculto"></div>
+
+        <div class="painel-grid">
+            <aside class="coluna-esquerda">
+                <div class="card">
+                    <h3>Novo Paciente</h3>
+                    <form id="form-paciente">
+                        <input type="text" id="paciente-nome" placeholder="Nome Paciente" required>
+                        <label for="paciente-chegada">Horário de chegada:</label>
+                        <input type="time" id="paciente-chegada" required>
+                        <label for="paciente-prioridade">Escolha uma prioridade:</label>
+                        <select id="paciente-prioridade">
+                            <option value="1">1 - Emergência</option>
+                            <option value="2">2 - Muito urgente</option>
+                            <option value="3">3 - Urgente</option>
+                            <option value="4">4 - Pouco urgente</option>
+                            <option value="5">5 - Não urgente</option>
+                        </select>
+                        <button type="submit">Cadastrar</button>
+                    </form>
+                </div>
+
+                <div class="card">
+                    <h3>Novo Médico</h3>
+                    <form id="form-medico">
+                        <input type="text" id="medico-nome" placeholder="Nome do médico" required>
+                        <input type="text" id="medico-crm" placeholder="CRM (ex: CRM-RJ 10234)" required>
+                        <button type="submit">Cadastrar</button>
+                    </form>
+                </div>
+
+                <div class="card">
+                    <h3>Histórico Recente</h3>
+                    <ul id="lista-historico">
+                        <li>Nenhum atendimento finalizado ainda.</li>
+                    </ul>
+                </div>
+            </aside>
+
+            <section class="coluna-centro">
+                <h3>Fila de Espera (Prioridade Clínica)</h3>
+                <div class="card preview-chamada">
+                    <div>
+                        <small>Próximo paciente:</small>
+                        <p id="preview-paciente">Fila vazia</p>
+                    </div>
+                    <div>
+                        <small>Próximo médico:</small>
+                        <p id="preview-medico">Nenhum disponível</p>
+                    </div>
+                    <button type="button" id="btn-chamar-proximo">Chamar Próximo</button>
+                </div>
+
+                <div id="lista-fila-prioridade"></div>
+
+                <h3 class="titulo-espacado">Ordem Cronológica de Chegada</h3>
+                <div id="lista-cronologica"></div>
+            </section>
+
+            <section class="coluna-centro-direita">
+                <h3>Consultas Rápidas</h3>
+
+                <div class="card">
+                    <label for="busca-paciente-id">Paciente por ID (Hash):</label>
+                    <div class="barra-acoes">
+                        <input type="number" id="busca-paciente-id" placeholder="ID do paciente..." min="1">
+                        <button type="button" id="btn-buscar-paciente-id">Buscar</button>
+                    </div>
+                    <div id="resultado-paciente-id" class="resultado-busca"></div>
+                </div>
+
+                <div class="card">
+                    <label>Chegada + ID (Árvore Rubro-Negra):</label>
+                    <div class="barra-acoes">
+                        <input type="time" id="busca-chegada-hora">
+                        <input type="number" id="busca-chegada-id" placeholder="ID..." min="1">
+                        <button type="button" id="btn-buscar-chegada">Buscar</button>
+                    </div>
+                    <div id="resultado-chegada" class="resultado-busca"></div>
+                </div>
+
+                <div class="card">
+                    <label for="busca-medico-id">Médico por ID (Hash):</label>
+                    <div class="barra-acoes">
+                        <input type="number" id="busca-medico-id" placeholder="ID do médico..." min="1">
+                        <button type="button" id="btn-buscar-medico-id">Buscar</button>
+                    </div>
+                    <div id="resultado-medico-id" class="resultado-busca"></div>
+                </div>
+
+                <h3 class="titulo-espacado">Todos os Pacientes</h3>
+                <div id="lista-todos-pacientes"></div>
+            </section>
+
+            <aside class="coluna-direita">
+                <img src="{% static 'atendimento/img/CRUZ.png' %}" alt="Cruz" class="cruz">
+                <h2>Atendimentos em Andamento</h2>
+                <div id="lista-atendimentos-ativos"></div>
+
+                <h2 class="titulo-espacado">Corpo Médico</h2>
+                <div id="lista-medicos"></div>
+            </aside>
+        </div>
+    </main>
+
+    <footer class="bottom">
+        <div class="parcerias">
+            <h3>Agilidade na triagem, precisão no cuidado — cada segundo salva vidas.</h3>
+            <p>Sistema Inteligente de Gerenciamento de Atendimentos de Emergência</p>
+        </div>
+        <span class="rodape-info">SIGAE © 2026 — Protocolo de Triagem Manchester</span>
+    </footer>
+
+    <script src="{% static 'atendimento/js/app.js' %}"></script>
+</body>
+
+</html>
