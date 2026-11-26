@@ -23,7 +23,7 @@ def _next_prime(n: int) -> int:
     return candidate
 
 class HashTable:
-    def __int__(self, initial_capacity: int = 11, max_load_factor: float = 0.75):
+    def __init__(self, initial_capacity: int = 11, max_load_factor: float = 0.75):
         self._initial_capacity = initial_capacity
         self._capacity = initial_capacity
         self._max_load_factor = max_load_factor
