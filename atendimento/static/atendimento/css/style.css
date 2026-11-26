@@ -7,96 +7,294 @@
 
 body {
     min-height: 100vh;
-    background: linear-gradient(135deg, #e0f2fe 0%, #fce7f3 50%, #fee2e2 100%);
+    display: flex;
+    flex-direction: column;
+    background-color: #ffffff;
+    background-image:
+        radial-gradient(circle at 15% 15%, rgba(254, 202, 202, 0.85), transparent 50%),
+        radial-gradient(circle at 50% 45%, rgba(255, 255, 255, 0.95), transparent 58%),
+        radial-gradient(circle at 88% 20%, rgba(186, 230, 253, 0.55), transparent 45%),
+        radial-gradient(circle at 75% 88%, rgba(254, 205, 211, 0.78), transparent 52%),
+        linear-gradient(135deg, #fff1f2 0%, #ffffff 48%, #ffe4e6 78%, #f0f9ff 100%);
     color: #1e293b;
 }
 
-.topo {
-    background: linear-gradient(90deg, #0284c7, #ec4899, #ef4444);
-    color: #ffffff;
-    padding: 18px 24px;
-    box-shadow: 0 4px 15px rgba(2, 132, 199, 0.15);
+.container {
+    flex: 1;
 }
 
-.topo h1 {
-    font-size: 20px;
+.topo {
+    background: linear-gradient(90deg, rgba(254, 226, 226, 0.82) 0%, rgba(255, 255, 255, 0.92) 55%, rgba(224, 242, 254, 0.72) 100%);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 2px solid transparent;
+    border-image: linear-gradient(90deg, #fda4af, #ffffff, #7dd3fc) 1;
+    padding: 18px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 4px 24px rgba(225, 29, 72, 0.08);
+}
+
+.topo .logo {
+    height: 120px;
+    width: auto;
+    object-fit: contain;
+}
+
+.topo .mensagem {
+    margin: 0 auto;
+    padding-right: 120px;
+    background: linear-gradient(90deg, #e11d48 0%, #f43f5e 60%, #0284c7 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 34px;
+}
+
+.resumo-topo {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 24px 0 24px;
+}
+
+.stat-pill {
+    background: rgba(255, 255, 255, 0.82);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.95);
+    padding: 8px 14px;
+    border-radius: 12px;
+    font-size: 13px;
+    color: #475569;
+    box-shadow: 0 4px 12px rgba(225, 29, 72, 0.04);
+}
+
+.stat-pill strong {
+    color: #e11d48;
+    font-size: 15px;
+    margin-left: 4px;
+}
+
+.resumo-topo .btn-secundario {
+    margin-left: auto;
+}
+
+.alerta-status {
+    margin: 14px 24px 0 24px;
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-size: 13px;
     font-weight: 600;
+    background: rgba(224, 242, 254, 0.9);
+    color: #0369a1;
+    border: 1px solid #7dd3fc;
+}
+
+.alerta-status.erro {
+    background: rgba(255, 228, 230, 0.92);
+    color: #9f1239;
+    border-color: #fda4af;
+}
+
+.oculto {
+    display: none;
 }
 
 .painel-grid {
     display: grid;
-    grid-template-columns: 280px 1fr 320px;
+    grid-template-columns: 280px 1fr 1fr 330px;
     gap: 20px;
-    padding: 24px;
+    padding: 20px 24px 24px 24px;
     align-items: start;
 }
 
-.card, .card-paciente, .card-medico {
-    background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.9);
+aside {
+    background: rgba(255, 255, 255, 0.62);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.92);
+    border-top: 2px solid rgba(253, 164, 175, 0.85);
+    padding: 18px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(225, 29, 72, 0.06), inset 0 1px 0 #ffffff;
+    padding-bottom: 32px;
+}
+
+aside > .card:last-child {
+    margin-bottom: 0;
+}
+
+.coluna-direita .cruz {
+    height: 100px;
+    width: auto;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto 12px auto;
+}
+
+.card,
+.card-paciente,
+.card-medico {
+    background: rgba(255, 255, 255, 0.86);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.96);
     padding: 16px;
     border-radius: 14px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+    box-shadow: 0 6px 18px rgba(225, 29, 72, 0.04);
     margin-bottom: 14px;
 }
 
-.card h3, .coluna-direita h2 {
+.card h3,
+.coluna-centro h3,
+.coluna-centro-direita h3,
+.coluna-direita h2 {
     font-size: 15px;
-    color: #0369a1;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    background: linear-gradient(90deg, #e11d48 0%, #fb7185 65%, #0284c7 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
     margin-bottom: 12px;
 }
 
-.card-paciente, .card-medico {
+.titulo-espacado {
+    margin-top: 20px;
+}
+
+.preview-chamada {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.preview-chamada small {
+    font-size: 11px;
+    text-transform: uppercase;
+    color: #64748b;
+    font-weight: 600;
+}
+
+.preview-chamada p {
+    font-size: 14px;
+    font-weight: 600;
+    color: #0f172a;
+}
+
+.card-paciente,
+.card-medico {
     display: flex;
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
     gap: 8px;
+    font-size: 14px;
 }
 
-input, select {
+.card-acoes {
+    width: 100%;
+    display: flex;
+    gap: 8px;
+    margin-top: 6px;
+    align-items: center;
+}
+
+.card-acoes select {
+    margin: 0;
+    padding: 6px 8px;
+    font-size: 12px;
+    flex: 1;
+}
+
+.card-acoes button {
+    padding: 6px 10px;
+    font-size: 12px;
+}
+
+label {
+    font-size: 13px;
+    color: #64748b;
+    margin-left: 2px;
+}
+
+input,
+select {
     width: 100%;
     padding: 9px 12px;
     margin: 6px 0 12px 0;
-    border: 1px solid #e2e8f0;
+    border: 1px solid rgba(253, 164, 175, 0.45);
     border-radius: 8px;
-    background: #ffffff;
+    background: rgba(255, 255, 255, 0.95);
+    color: #0f172a;
     outline: none;
+    transition: all 0.2s ease;
 }
 
-input:focus, select:focus {
-    border-color: #ec4899;
+input:focus,
+select:focus {
+    border-color: #fb7185;
+    box-shadow: 0 0 12px rgba(251, 113, 133, 0.22);
 }
 
 .barra-acoes {
     display: flex;
-    gap: 10px;
-    margin-bottom: 16px;
+    gap: 8px;
+    margin-top: 6px;
 }
 
 .barra-acoes input {
     margin: 0;
     flex: 1;
+    min-width: 0;
+}
+
+.resultado-busca {
+    margin-top: 10px;
+    font-size: 13px;
+    color: #334155;
 }
 
 button {
-    background: linear-gradient(90deg, #0284c7, #db2777);
+    background: linear-gradient(120deg, #f43f5e 0%, #fb7185 65%, #60a5fa 100%);
     color: #ffffff;
+    text-shadow: 0 1px 2px rgba(15, 23, 42, 0.18);
     border: none;
-    padding: 9px 16px;
+    padding: 9px 14px;
     border-radius: 8px;
     font-weight: 600;
     cursor: pointer;
-    transition: opacity 0.2s;
+    box-shadow: 0 4px 14px rgba(244, 63, 94, 0.22);
+    transition: all 0.2s ease;
 }
 
 button:hover {
-    opacity: 0.9;
+    filter: brightness(1.05);
+    transform: translateY(-1px);
 }
 
-.card button {
+button:active {
+    transform: translateY(0);
+}
+
+.card form button,
+.preview-chamada button {
     width: 100%;
+}
+
+.btn-secundario {
+    background: linear-gradient(120deg, #0284c7 0%, #38bdf8 100%);
+    box-shadow: 0 4px 12px rgba(2, 132, 199, 0.22);
+}
+
+.btn-concluir {
+    background: linear-gradient(120deg, #10b981 0%, #34d399 100%);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.24);
+}
+
+.btn-cancelar {
+    background: linear-gradient(120deg, #e11d48 0%, #fb7185 100%);
+    box-shadow: 0 4px 12px rgba(225, 29, 72, 0.24);
 }
 
 .card ul {
@@ -109,6 +307,12 @@ button:hover {
     margin-bottom: 6px;
 }
 
+.vazio {
+    font-size: 13px;
+    color: #64748b;
+    padding: 8px 4px;
+}
+
 .badge {
     padding: 4px 10px;
     border-radius: 20px;
@@ -117,15 +321,32 @@ button:hover {
     color: #ffffff;
 }
 
-.badge-1 { background: #dc2626; }
-.badge-2 { background: #ea580c; }
-.badge-3 { background: #ca8a04; }
-.badge-4 { background: #16a34a; }
-.badge-5 { background: #2563eb; }
+.badge-1 {
+    background: #dc2626;
+    box-shadow: 0 0 10px rgba(220, 38, 38, 0.25);
+}
+
+.badge-2 {
+    background: #ea580c;
+}
+
+.badge-3 {
+    background: #eab308;
+    color: #1e293b;
+}
+
+.badge-4 {
+    background: #10b981;
+}
+
+.badge-5 {
+    background: #38bdf8;
+}
 
 .status-disponivel {
-    background: #dcfce7;
-    color: #166534;
+    background: #e0f2fe;
+    color: #0369a1;
+    border: 1px solid #7dd3fc;
     padding: 4px 8px;
     border-radius: 6px;
     font-size: 12px;
@@ -134,9 +355,40 @@ button:hover {
 
 .status-ocupado {
     background: #ffe4e6;
-    color: #be123c;
+    color: #9f1239;
+    border: 1px solid #fda4af;
     padding: 4px 8px;
     border-radius: 6px;
     font-size: 12px;
     font-weight: 600;
+}
+
+.bottom {
+    background: linear-gradient(90deg, rgba(254, 226, 226, 0.82) 0%, rgba(255, 255, 255, 0.92) 55%, rgba(224, 242, 254, 0.72) 100%);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-top: 2px solid transparent;
+    border-image: linear-gradient(90deg, #fda4af, #ffffff, #7dd3fc) 1;
+    padding: 36px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    box-shadow: 0 -4px 24px rgba(225, 29, 72, 0.06);
+}
+
+.bottom .parcerias h3 {
+    font-size: 20px;
+    font-weight: 700;
+    background: linear-gradient(90deg, #e11d48 0%, #fb7185 65%, #0284c7 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.bottom .parcerias p,
+.bottom .rodape-info {
+    font-size: 14px;
+    color: #64748b;
+    margin-top: 4px;
 }
