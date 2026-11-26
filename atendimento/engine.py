@@ -4,7 +4,8 @@ from heap.min_heap import MinHeap
 from rubro_negra.tree import RedBlackTree
 from tabela_hash.hash_table import HashTable
 
-VALID_PATIENT_STATUSES = ("Aguardando", "Em atendimento", "Concluído", "Cancelado")
+VALID_PATIENT_STATUSES = (
+    "Aguardando", "Em atendimento", "Concluído", "Cancelado")
 VALID_DOCTOR_STATUSES = ("Disponível", "Em atendimento")
 VALID_ATTENDANCE_STATUSES = ("Em atendimento", "Concluído", "Cancelado")
 
@@ -37,8 +38,10 @@ class SigaeEngine:
         self.attendance_hash = HashTable(initial_capacity=11)
 
         self.rb_tree = RedBlackTree()
-        self.patient_heap = MinHeap(key_fn=lambda p: (p.priority, p.arrival_minutes, p.id))
-        self.doctor_heap = MinHeap(key_fn=lambda d: (d.completed_count, d.last_assigned_seq, d.id))
+        self.patient_heap = MinHeap(key_fn=lambda p: (
+            p.priority, p.arrival_minutes, p.id))
+        self.doctor_heap = MinHeap(key_fn=lambda d: (
+            d.completed_count, d.last_assigned_seq, d.id))
 
         self._active_attendances: list[Attendance] = []
         self._history: list[Attendance] = []
@@ -99,7 +102,8 @@ class SigaeEngine:
         patient = Patient(
             patient_id=patient_id,
             name=str(name).strip(),
-            arrival_time=format_minutes_hhmm(arrival_minutes) if arrival_time else arrival_time,
+            arrival_time=format_minutes_hhmm(
+                arrival_minutes) if arrival_time else arrival_time,
             arrival_minutes=arrival_minutes,
             priority=priority,
             status=status,
@@ -125,7 +129,8 @@ class SigaeEngine:
         patient = self.patient_hash.get(patient_id)
         doctor = self.doctor_hash.get(doctor_id)
         if patient is None or doctor is None:
-            raise ValueError("Inconsistência ao hidratar atendimento: paciente ou médico ausente.")
+            raise ValueError(
+                "Inconsistência ao hidratar atendimento: paciente ou médico ausente.")
 
         attendance = Attendance(
             attendance_id=attendance_id,
@@ -201,13 +206,15 @@ class SigaeEngine:
 
     def reclassify_patient(self, patient_id: int, new_priority: int) -> Patient:
         if not _is_valid_priority(new_priority):
-            raise ValueError("Nova classificação de risco deve estar entre 1 e 5.")
+            raise ValueError(
+                "Nova classificação de risco deve estar entre 1 e 5.")
 
         patient = self.patient_hash.get(patient_id)
         if patient is None:
             raise ValueError(f"Paciente #{patient_id} não encontrado.")
         if patient.status != "Aguardando":
-            raise ValueError("Só é possível reclassificar pacientes com situação 'Aguardando'.")
+            raise ValueError(
+                "Só é possível reclassificar pacientes com situação 'Aguardando'.")
 
         old_priority = patient.priority
         try:
@@ -232,7 +239,8 @@ class SigaeEngine:
             removed_heap = True
 
             if not self.rb_tree.remove(patient):
-                raise RuntimeError("Falha ao remover paciente da Árvore Rubro-Negra.")
+                raise RuntimeError(
+                    "Falha ao remover paciente da Árvore Rubro-Negra.")
 
             patient.status = "Cancelado"
             return patient
@@ -251,9 +259,11 @@ class SigaeEngine:
         clean_name = str(name).strip()
         clean_reg = str(registry_code).strip()
         if len(clean_name) < 2 or len(clean_name) > 120:
-            raise ValueError("Informe um nome de médico válido (2 a 120 caracteres).")
+            raise ValueError(
+                "Informe um nome de médico válido (2 a 120 caracteres).")
         if len(clean_reg) < 3 or len(clean_reg) > 40:
-            raise ValueError("Informe um registro profissional fictício válido.")
+            raise ValueError(
+                "Informe um registro profissional fictício válido.")
 
         if self.doctor_hash.contains(doctor_id):
             raise ValueError(f"Médico #{doctor_id} já existe.")
@@ -261,9 +271,11 @@ class SigaeEngine:
         reg_normalized = clean_reg.upper()
         for existing in self.doctor_hash.values():
             if existing.registry_code.upper() == reg_normalized:
-                raise ValueError(f"Registro profissional '{clean_reg}' já está cadastrado.")
+                raise ValueError(
+                    f"Registro profissional '{clean_reg}' já está cadastrado.")
 
-        doctor = Doctor(doctor_id=doctor_id, name=clean_name, registry_code=clean_reg)
+        doctor = Doctor(doctor_id=doctor_id, name=clean_name,
+                        registry_code=clean_reg)
 
         inserted_hash = False
         try:
@@ -296,7 +308,8 @@ class SigaeEngine:
 
         doctor = self.doctor_heap.peek()
         if doctor is None:
-            raise ValueError("Nenhum médico disponível no momento. O paciente permanece na fila.")
+            raise ValueError(
+                "Nenhum médico disponível no momento. O paciente permanece na fila.")
 
         return patient, doctor
 
@@ -319,11 +332,13 @@ class SigaeEngine:
         try:
             extracted_patient = self.patient_heap.extract_min()
             if extracted_patient is not patient:
-                raise RuntimeError("Inconsistência ao extrair paciente do Heap.")
+                raise RuntimeError(
+                    "Inconsistência ao extrair paciente do Heap.")
             removed_patient_heap = True
 
             if not self.rb_tree.remove(patient):
-                raise RuntimeError("Falha ao remover paciente da Árvore Rubro-Negra.")
+                raise RuntimeError(
+                    "Falha ao remover paciente da Árvore Rubro-Negra.")
             removed_rb = True
 
             extracted_doctor = self.doctor_heap.extract_min()
@@ -407,7 +422,8 @@ class SigaeEngine:
         if attendance is None:
             raise ValueError(f"Atendimento #{attendance_id} não encontrado.")
         if attendance.status != "Em atendimento":
-            raise ValueError("Só é possível cancelar atendimentos em andamento.")
+            raise ValueError(
+                "Só é possível cancelar atendimentos em andamento.")
 
         doctor = attendance.doctor
         patient = attendance.patient
@@ -457,36 +473,44 @@ class SigaeEngine:
         waiting_from_heap = sorted(p.id for p in self.patient_heap.all_items())
 
         if waiting_from_hash != waiting_from_rb or waiting_from_hash != waiting_from_heap:
-            raise AssertionError("Inconsistência entre os índices de pacientes aguardando.")
+            raise AssertionError(
+                "Inconsistência entre os índices de pacientes aguardando.")
 
         available_from_hash = sorted(
             d.id for d in self.doctor_hash.values() if d.status == "Disponível"
         )
-        available_from_heap = sorted(d.id for d in self.doctor_heap.all_items())
+        available_from_heap = sorted(
+            d.id for d in self.doctor_heap.all_items())
 
         if available_from_hash != available_from_heap:
-            raise AssertionError("Inconsistência entre a Hash e o Heap de médicos disponíveis.")
+            raise AssertionError(
+                "Inconsistência entre a Hash e o Heap de médicos disponíveis.")
 
         active_ids = sorted(a.id for a in self._active_attendances)
         hash_active_ids = sorted(
             a.id for a in self.attendance_hash.values() if a.status == "Em atendimento"
         )
         if active_ids != hash_active_ids:
-            raise AssertionError("Inconsistência entre atendimentos ativos e a Hash de atendimentos.")
+            raise AssertionError(
+                "Inconsistência entre atendimentos ativos e a Hash de atendimentos.")
 
         busy_doctors = sorted(
             d.id for d in self.doctor_hash.values() if d.status == "Em atendimento"
         )
-        active_att_doctors = sorted(a.doctor.id for a in self._active_attendances)
+        active_att_doctors = sorted(
+            a.doctor.id for a in self._active_attendances)
         if busy_doctors != active_att_doctors:
-            raise AssertionError("Inconsistência entre médicos ocupados e atendimentos ativos.")
+            raise AssertionError(
+                "Inconsistência entre médicos ocupados e atendimentos ativos.")
 
         busy_patients = sorted(
             p.id for p in self.patient_hash.values() if p.status == "Em atendimento"
         )
-        active_att_patients = sorted(a.patient.id for a in self._active_attendances)
+        active_att_patients = sorted(
+            a.patient.id for a in self._active_attendances)
         if busy_patients != active_att_patients:
-            raise AssertionError("Inconsistência entre pacientes em atendimento e atendimentos ativos.")
+            raise AssertionError(
+                "Inconsistência entre pacientes em atendimento e atendimentos ativos.")
 
         return True
 

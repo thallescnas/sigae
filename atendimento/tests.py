@@ -17,7 +17,8 @@ class SigaeEngineTests(SimpleTestCase):
         att1 = self.engine.call_next(1, started_at="08:10:00")
         att2 = self.engine.call_next(2, started_at="08:11:00")
         att3 = self.engine.call_next(3, started_at="08:12:00")
-        self.assertEqual([att1.doctor.id, att2.doctor.id, att3.doctor.id], [1, 2, 3])
+        self.assertEqual([att1.doctor.id, att2.doctor.id,
+                         att3.doctor.id], [1, 2, 3])
         self.assertTrue(self.engine.validate_all())
 
         with self.assertRaises(ValueError):
@@ -44,9 +45,12 @@ class SigaeEngineTests(SimpleTestCase):
     def test_priority_prevalence_reclassification_and_chronological_order(self):
         self.engine.register_doctor(1, "Dr. Plantonista", "CRM-2001")
 
-        p1 = self.engine.register_patient(1, "Chegou Cedo Pouco Urgente", "8:05", 4)
-        p2 = self.engine.register_patient(2, "Chegou Tarde Emergência", "08:30", 1)
-        p3 = self.engine.register_patient(3, "Chegou Médio Urgente", "08:15", 3)
+        p1 = self.engine.register_patient(
+            1, "Chegou Cedo Pouco Urgente", "8:05", 4)
+        p2 = self.engine.register_patient(
+            2, "Chegou Tarde Emergência", "08:30", 1)
+        p3 = self.engine.register_patient(
+            3, "Chegou Médio Urgente", "08:15", 3)
 
         self.assertEqual(p1.arrival_time, "08:05")
         self.assertIs(self.engine.search_waiting_by_arrival("08:05", 1), p1)
@@ -67,7 +71,8 @@ class SigaeEngineTests(SimpleTestCase):
     def test_cancel_waiting_and_cancel_attendance_preserve_counts_and_invariants(self):
         doc = self.engine.register_doctor(1, "Dra. Sofia", "CRM-3001")
         p1 = self.engine.register_patient(1, "Paciente Fila", "09:00", 2)
-        p2 = self.engine.register_patient(2, "Paciente Consultório", "09:05", 1)
+        p2 = self.engine.register_patient(
+            2, "Paciente Consultório", "09:05", 1)
 
         self.engine.cancel_waiting_patient(p1.id)
         self.assertEqual(p1.status, "Cancelado")
