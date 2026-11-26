@@ -308,3 +308,102 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
     });
 });
+
+document.addEventListener("DOMContentLoaded", async () => {
+  const campoChegada = document.getElementById("paciente-chegada");
+  const horaAtual = () => new Date().toTimeString().slice(0, 5);
+  campoChegada.value = horaAtual();
+
+  try {
+    const estadoInicial = await enviarRequisicao("/api/state/");
+    atualizarTela(estadoInicial.snapshot);
+  } catch (erro) {
+    mostrarAviso(erro.message, true);
+  }
+
+  document
+    .getElementById("form-paciente")
+    .addEventListener("submit", async (evento) => {
+      evento.preventDefault();
+      const dados = {
+        name: document.getElementById("paciente-nome").value.trim(),
+        arrival_time: campoChegada.value,
+        priority: Number(document.getElementById("paciente-prioridade").value),
+      };
+      await executarAcao("/api/patients/", dados);
+      evento.target.reset();
+      campoChegada.value = horaAtual();
+    });
+
+  document
+    .getElementById("form-medico")
+    .addEventListener("submit", async (evento) => {
+      evento.preventDefault();
+      const dados = {
+        name: document.getElementById("medico-nome").value.trim(),
+        registry_code: document.getElementById("medico-crm").value.trim(),
+      };
+      await executarAcao("/api/doctors/", dados);
+      evento.target.reset();
+    });
+
+  document
+    .getElementById("btn-chamar-proximo")
+    .addEventListener("click", () => {
+      executarAcao("/api/attendances/call/");
+    });
+
+  document.getElementById("btn-validar").addEventListener("click", () => {
+    executarAcao("/api/validate/", {}, "Estruturas validadas com sucesso!");
+  });
+
+  document
+    .getElementById("btn-buscar-paciente-id")
+    .addEventListener("click", async () => {
+      const id = document.getElementById("busca-paciente-id").value.trim();
+      const resultado = document.getElementById("resultado-paciente-id");
+      if (!id) return;
+
+      try {
+        const dados = await enviarRequisicao(`/api/patients/${id}/`);
+        const p = dados.patient;
+        resultado.innerHTML = `<strong>#${p.id} ${p.name}</strong> — ${p.priority_label} • Chegada: ${p.arrival_time} • Status: <strong>${p.status}</strong>`;
+      } catch (erro) {
+        resultado.textContent = erro.message;
+      }
+    });
+
+  document
+    .getElementById("btn-buscar-chegada")
+    .addEventListener("click", async () => {
+      const hora = document.getElementById("busca-chegada-hora").value;
+      const id = document.getElementById("busca-chegada-id").value.trim();
+      const resultado = document.getElementById("resultado-chegada");
+      if (!hora || !id) return;
+
+      try {
+        const url = `/api/patients/search-arrival/?arrival_time=${encodeURIComponent(hora)}&patient_id=${encodeURIComponent(id)}`;
+        const dados = await enviarRequisicao(url);
+        const p = dados.patient;
+        resultado.innerHTML = `<strong>#${p.id} ${p.name}</strong> — ${p.priority_label} • Chegada: ${p.arrival_time} • Status: <strong>${p.status}</strong>`;
+      } catch (erro) {
+        resultado.textContent = erro.message;
+      }
+    });
+
+  document
+    .getElementById("btn-buscar-medico-id")
+    .addEventListener("click", async () => {
+      const id = document.getElementById("busca-medico-id").value.trim();
+      const resultado = document.getElementById("resultado-medico-id");
+      if (!id) return;
+
+      try {
+        const dados = await enviarRequisicao(`/api/doctors/${id}/`);
+        const m = dados.doctor;
+        resultado.innerHTML = `<strong>#${m.id} ${m.name}</strong> (${m.registry_code}) — ${m.status} • Concluídos: <strong>${m.completed_count}</strong>`;
+      } catch (erro) {
+        resultado.textContent = erro.message;
+      }
+    });
+});
