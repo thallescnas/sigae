@@ -1,0 +1,4 @@
+services:
+  django:
+    build: .
+    env_file: .env
