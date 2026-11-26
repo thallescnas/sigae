@@ -30,3 +30,11 @@ async function enviarRequisicao(url, metodo = "GET", dados = null) {
   return json;
 }
 
+function mostrarAviso(texto, ehErro = false) {
+  const caixa = document.getElementById("alerta-status");
+  caixa.textContent = texto;
+  if (ehErro) {
+    caixa.className = "alerta-status erro";
+  } else caixa.className = "alerta-status";
+}
+
