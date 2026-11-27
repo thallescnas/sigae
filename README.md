@@ -4,6 +4,12 @@ Aplicação web desenvolvida para a disciplina de Estrutura de Dados Avançados 
 
 Todos os dados de pacientes e registros médicos utilizados na aplicação são estritamente fictícios e destinados exclusivamente à simulação acadêmica.
 
+## Integrantes do Grupo
+
+- João Victor Elizeu Silva
+- Raissa Oliveira Rosa
+- Thalles Cruz do Nascimento
+
 ---
 
 ## Painel da Aplicação
